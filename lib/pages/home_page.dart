@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  showRegisterModel() {
+  void showRegisterModel() {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: context,
@@ -45,10 +45,14 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
+  DBAdmin dbAdmin = DBAdmin();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          dbAdmin.obetenerGastos();
+        }),
         // appBar: AppBar(),
         body: Stack(
           children: [
@@ -57,9 +61,8 @@ class _HomePageState extends State<HomePage> {
               children: [
                 InkWell(
                   onTap: () {
+                    dbAdmin.checkDatabase();
                     // showRegisterModel();
-                    DBAdmin dbadmin = DBAdmin();
-                    dbadmin.initDatabase();
                   },
                   child: Container(
                     color: Colors.black,
