@@ -33,26 +33,20 @@ class _HomePageState extends State<HomePage> {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: context,
+        isScrollControlled: true,
         builder: (BuildContext context) {
-          return Container(
-              padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(34),
-                      topRight: Radius.circular(34))),
+          return Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
               child: RegisterModal());
         });
   }
 
-  DBAdmin dbAdmin = DBAdmin();
+  // DBAdmin dbAdmin = DBAdmin();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(onPressed: () {
-          dbAdmin.obetenerGastos();
-        }),
         // appBar: AppBar(),
         body: Stack(
           children: [
@@ -61,7 +55,8 @@ class _HomePageState extends State<HomePage> {
               children: [
                 InkWell(
                   onTap: () {
-                    dbAdmin.checkDatabase();
+                    showRegisterModel();
+                    // DBAdmin().insrtarGasto();
                     // showRegisterModel();
                   },
                   child: Container(
@@ -117,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.black45),
                         ),
                         busquedaWidget(),
-                        ListTile(
+                        const ListTile(
                           title: Text("Compras en el super"),
                           subtitle: Text("14/01/2025 23:21"),
                         )

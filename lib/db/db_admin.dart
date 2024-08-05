@@ -6,15 +6,22 @@ import 'package:sqflite/sqflite.dart';
 class DBAdmin {
   Database? myDatabase;
 
-  Future<Database?> checkDatabase() async {
+  static final DBAdmin _instance = DBAdmin._();
+  DBAdmin._();
+
+  factory DBAdmin() {
+    return _instance;
+  }
+
+  Future<Database?> _checkDatabase() async {
     if (myDatabase == null) {
-      myDatabase = await initDatabase();
+      myDatabase = await _initDatabase();
     }
     return myDatabase;
     //myDatabase ??= await initDatabase();
   }
 
-  Future<Database> initDatabase() async {
+  Future<Database> _initDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
     String pathdatabase = join(directory.path, "PagosDB.db");
     return await openDatabase(
@@ -34,7 +41,7 @@ class DBAdmin {
   }
 
   insrtarGasto() async {
-    Database? db = await checkDatabase();
+    Database? db = await _checkDatabase();
     int res = await db!.insert("GASTOS", {
       "title": "Compras del mercado",
       "price": 1200.50,
@@ -45,11 +52,26 @@ class DBAdmin {
   }
 
   obetenerGastos() async {
-    Database? db = await checkDatabase();
+    Database? db = await _checkDatabase();
     print("------------");
     // print(db);
     print("------------");
-    List data = await db!.query("GASTOS");
+    //  List<Map<String, Object?>> data = await db!.query("GASTOS");
+    List<Map<String, Object?>> data =
+        await db!.rawQuery("Select title from gastos where type='Alimentos'");
     print(data);
+  }
+
+  updateGasto() async {
+    Database? db = await _checkDatabase();
+    int res =
+        await db!.update("GASTOS", {"title": "actualizado"}, where: "id=1");
+    print(res);
+  }
+
+  deleteGasto() async {
+    Database? db = await _checkDatabase();
+    int res = await db!.delete("GASTOS", where: 'id=1');
+    print(res);
   }
 }
