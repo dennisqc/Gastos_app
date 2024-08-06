@@ -1,5 +1,6 @@
 import 'package:appgastos/widget/field_model_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 class RegisterModal extends StatefulWidget {
   const RegisterModal({super.key});
@@ -30,6 +31,14 @@ class _RegisterModalState extends State<RegisterModal> {
         ));
   }
 
+  showDateTimePicker() async {
+    DateTime? datePicker = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2022),
+        lastDate: DateTime(2030));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,7 +67,8 @@ class _RegisterModalState extends State<RegisterModal> {
             hint: "Selecciona una fecha",
             controller: _dateController,
             isDatePicker: true,
-            funcion: () {
+            function: () {
+              showDateTimePicker();
               print("es una fehca");
             },
           ),

@@ -8,20 +8,21 @@ class FieldModelWidget extends StatelessWidget {
   TextEditingController controller;
   bool isNumberKeyBoard;
   bool isDatePicker;
-  VoidCallback? funcion;
+  VoidCallback? function;
   FieldModelWidget(
       {required this.hint,
       required this.controller,
       this.isNumberKeyBoard = false,
-      this.isDatePicker = false,this.funcion});
+      this.isDatePicker = false,
+      this.function});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextField(
-        onTap: funcion,
-        readOnly:isDatePicker ,
+        onTap: function,
+        readOnly: isDatePicker,
         controller: controller,
         decoration: InputDecoration(
           hintText: hint,
