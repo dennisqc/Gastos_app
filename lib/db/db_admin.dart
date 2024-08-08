@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:appgastos/models/gasto_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -40,32 +41,42 @@ class DBAdmin {
     );
   }
 
-  insrtarGasto() async {
+  // Future<int> insrtarGasto(Map<String, dynamic> data) async {
+  Future<int> insrtarGasto(GastoModel gasto) async {
     Database? db = await _checkDatabase();
-    int res = await db!.insert("GASTOS", {
-      "title": "Compras del mercado",
-      "price": 1200.50,
-      "datetime": "12/12/2024",
-      "type": "Alimentos"
-    });
-    print(res);
+    int res = await db!.insert("GASTOS", gasto.convertirMap()
+        // {
+        //   "title": "Compras del mercado",
+        //   "price": 1200.50,
+        //   "datetime": "12/12/2024",
+        //   "type": "Alimentos"
+        // },
+        );
+    return res;
   }
 
-  obetenerGastos() async {
+  Future<List<GastoModel>> obetenerGastos() async {
     Database? db = await _checkDatabase();
-    print("------------");
-    // print(db);
-    print("------------");
-    //  List<Map<String, Object?>> data = await db!.query("GASTOS");
-    List<Map<String, Object?>> data =
-        await db!.rawQuery("Select title from gastos where type='Alimentos'");
+    List<Map<String, Object?>> data = await db!.query("GASTOS");
+    List<GastoModel> gastosList =
+        data.map((e) => GastoModel.fromDB(e)).toList();
+
     print(data);
+    print(gastosList);
+
+    return gastosList;
+    // print("------------");
+    // print(db);
+    // print("------------");
+    // //  List<Map<String, Object?>> data = await db!.query("GASTOS");
+    // List<Map<String, Object?>> data =
+    //     await db!.rawQuery("Select title from gastos where type='Alimentos'");
+    // print(data);
   }
 
   updateGasto() async {
     Database? db = await _checkDatabase();
-    int res =
-        await db!.update("GASTOS", {"title": "actualizado"}, where: "id=1");
+    int res = await db!.update("GASTOS", {"price": 20});
     print(res);
   }
 

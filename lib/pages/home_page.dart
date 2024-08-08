@@ -1,4 +1,6 @@
 import 'package:appgastos/db/db_admin.dart';
+import 'package:appgastos/models/gasto_model.dart';
+import 'package:appgastos/widget/item_gasto.dart';
 import 'package:appgastos/widget/register_modal.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +12,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<GastoModel> gastos = [];
+  GastoModel gasto1 = GastoModel(
+      title: "Titulo", price: 12, datetime: "12/1/12", type: "Alimentos");
+
   Widget busquedaWidget() {
     return TextField(
       decoration: InputDecoration(
@@ -31,15 +37,31 @@ class _HomePageState extends State<HomePage> {
 
   void showRegisterModel() {
     showModalBottomSheet(
-        backgroundColor: Colors.transparent,
-        context: context,
-        isScrollControlled: true,
-        builder: (BuildContext context) {
-          return Padding(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: RegisterModal());
-        });
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: RegisterModal(),
+        );
+      },
+    ).then((value) {
+      getDataFromDb();
+    });
+  }
+
+  Future<void> getDataFromDb() async {
+    gastos = await DBAdmin().obetenerGastos();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getDataFromDb();
+    super.initState();
   }
 
   // DBAdmin dbAdmin = DBAdmin();
@@ -63,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.black,
                     height: 100,
                     width: double.infinity,
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
@@ -92,19 +114,21 @@ class _HomePageState extends State<HomePage> {
                   child: Container(
                     padding: EdgeInsets.only(top: 16, left: 16, right: 16),
                     width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(35),
-                            bottomRight: Radius.circular(35))),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(35),
+                        bottomRight: Radius.circular(35),
+                      ),
+                    ),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           "Resumen de gastos",
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold),
                         ),
-                        Text(
+                        const Text(
                           "Gestiona tus datos",
                           style: TextStyle(
                               fontSize: 14,
@@ -112,10 +136,20 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.black45),
                         ),
                         busquedaWidget(),
-                        const ListTile(
-                          title: Text("Compras en el super"),
-                          subtitle: Text("14/01/2025 23:21"),
-                        )
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount: gastos.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ItemGasto(gasto: gastos[index]);
+                              }),
+                        ),
+                        // const ListTile(
+                        //   title: Text("Compras en el super"),
+                        //   subtitle: Text("14/01/2025 23:21"),
+                        // ),
+                        // ItemGasto(
+                        //   gasto: gasto1,
+                        // ),
                       ],
                     ),
                   ),
