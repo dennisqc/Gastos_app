@@ -2,7 +2,7 @@ import 'package:appgastos/models/gasto_model.dart';
 import 'package:flutter/material.dart';
 
 class ItemGasto extends StatelessWidget {
-  GastoModel gasto;
+  final GastoModel gasto;
 
   ItemGasto({required this.gasto});
 
@@ -34,12 +34,26 @@ class ItemGasto extends StatelessWidget {
             fontWeight: FontWeight.w400,
           ),
         ),
-        trailing: Text(
-          "S/ ${gasto.price}",
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w400,
-          ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "S/ ${gasto.price}",
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            SizedBox(width: 8),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.delete,
+                size: 20,
+              ),
+              constraints: BoxConstraints(),
+            ),
+          ],
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:appgastos/db/db_admin.dart';
+import 'package:appgastos/generated/l10n.dart';
 import 'package:appgastos/models/gasto_model.dart';
 import 'package:appgastos/widget/item_gasto.dart';
 import 'package:appgastos/widget/register_modal.dart';
@@ -135,6 +136,7 @@ class _HomePageState extends State<HomePage> {
                               fontWeight: FontWeight.w400,
                               color: Colors.black45),
                         ),
+                        Text(S.of(context).hello),
                         busquedaWidget(),
                         Expanded(
                           child: ListView.builder(
