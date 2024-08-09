@@ -85,8 +85,13 @@ class DBAdmin {
     int res = await db!.delete(
       "GASTOS",
       where: 'ID = ?',
-      whereArgs: [id], // Usar el ID para especificar qué registro eliminar
+      whereArgs: [id],
     );
     print(res);
+  }
+
+  Future<void> deleteGastoById(int id) async {
+    Database? db = await _checkDatabase();
+    await db!.delete("GASTOS", where: 'ID = ?', whereArgs: [id]);
   }
 }

@@ -14,25 +14,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<GastoModel> gastos = [];
-  GastoModel gasto1 = GastoModel(
-      title: "Titulo", price: 12, datetime: "12/1/12", type: "Alimentos");
 
   Widget busquedaWidget() {
     return TextField(
       decoration: InputDecoration(
-          hintText: "Buscar por titulo",
-          hintStyle:
-              TextStyle(color: Colors.black.withOpacity(0.4), fontSize: 14),
-          filled: true,
-          fillColor: Colors.black.withOpacity(0.05),
-          contentPadding: EdgeInsets.all(16),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(16))),
+        hintText: "Buscar por titulo",
+        hintStyle:
+            TextStyle(color: Colors.black.withOpacity(0.4), fontSize: 14),
+        filled: true,
+        fillColor: Colors.black.withOpacity(0.05),
+        contentPadding: EdgeInsets.all(16),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
     );
   }
 
@@ -60,28 +60,26 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    getDataFromDb();
     super.initState();
+    getDataFromDb();
   }
 
-  // DBAdmin dbAdmin = DBAdmin();
+  Future<void> deleteGasto(int id) async {
+    await DBAdmin().deleteGastoById(id);
+    getDataFromDb();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        // appBar: AppBar(),
         body: Stack(
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 InkWell(
-                  onTap: () {
-                    showRegisterModel();
-                    // DBAdmin().insrtarGasto();
-                    // showRegisterModel();
-                  },
+                  onTap: showRegisterModel,
                   child: Container(
                     color: Colors.black,
                     height: 100,
@@ -93,16 +91,15 @@ class _HomePageState extends State<HomePage> {
                           Icons.add,
                           color: Colors.white,
                         ),
-                        SizedBox(
-                          width: 8,
-                        ),
+                        SizedBox(width: 8),
                         Text(
                           "Agregar",
                           style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 18),
-                        )
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -127,38 +124,35 @@ class _HomePageState extends State<HomePage> {
                         const Text(
                           "Resumen de gastos",
                           style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const Text(
                           "Gestiona tus datos",
                           style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black45),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black45,
+                          ),
                         ),
-                        Text(S.of(context).hello),
                         busquedaWidget(),
                         Expanded(
                           child: ListView.builder(
-                              itemCount: gastos.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ItemGasto(gasto: gastos[index]);
-                              }),
+                            itemCount: gastos.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return ItemGasto(
+                                gasto: gastos[index],
+                                onDelete: () => deleteGasto(gastos[index].id!),
+                              );
+                            },
+                          ),
                         ),
-                        // const ListTile(
-                        //   title: Text("Compras en el super"),
-                        //   subtitle: Text("14/01/2025 23:21"),
-                        // ),
-                        // ItemGasto(
-                        //   gasto: gasto1,
-                        // ),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 75,
-                )
+                SizedBox(height: 75),
               ],
             ),
           ],

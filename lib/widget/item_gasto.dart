@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 
 class ItemGasto extends StatelessWidget {
   final GastoModel gasto;
+  final VoidCallback onDelete; // Función de eliminación pasada como parámetro
 
-  ItemGasto({required this.gasto});
+  ItemGasto({
+    required this.gasto,
+    required this.onDelete, // Constructor actualizado
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +29,6 @@ class ItemGasto extends StatelessWidget {
       case 'Otros':
         assetImage = "assets/images/otros.webp";
         break;
-
       default:
         assetImage = "assets/images/otros.webp";
     }
@@ -67,9 +70,8 @@ class ItemGasto extends StatelessWidget {
             ),
             SizedBox(width: 8),
             IconButton(
-              onPressed: () {
-                // onDelete(gasto.id);
-              },
+              onPressed:
+                  onDelete, // Llama a la función de eliminación pasada como parámetro
               icon: Icon(
                 Icons.delete,
                 size: 20,
