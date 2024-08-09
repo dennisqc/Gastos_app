@@ -8,6 +8,27 @@ class ItemGasto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String assetImage;
+    switch (gasto.type) {
+      case 'Alimentos':
+        assetImage = "assets/images/alimentos.webp";
+        break;
+      case 'Banco y seguro':
+        assetImage = "assets/images/bancos.webp";
+        break;
+      case 'Entretenimiento':
+        assetImage = "assets/images/entretenimiento.webp";
+        break;
+      case 'Servicios':
+        assetImage = "assets/images/servicios.webp";
+        break;
+      case 'Otros':
+        assetImage = "assets/images/otros.webp";
+        break;
+
+      default:
+        assetImage = "assets/images/otros.webp";
+    }
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
@@ -16,7 +37,7 @@ class ItemGasto extends StatelessWidget {
       ),
       child: ListTile(
         leading: Image.asset(
-          "assets/images/alimentos.webp",
+          assetImage,
           height: 40,
           width: 40,
         ),
@@ -46,7 +67,9 @@ class ItemGasto extends StatelessWidget {
             ),
             SizedBox(width: 8),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                // onDelete(gasto.id);
+              },
               icon: Icon(
                 Icons.delete,
                 size: 20,

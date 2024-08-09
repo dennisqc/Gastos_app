@@ -4,6 +4,7 @@ import 'package:appgastos/util/data_general.dart';
 import 'package:appgastos/widget/field_model_widget.dart';
 import 'package:appgastos/widget/item_type.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class RegisterModal extends StatefulWidget {
   const RegisterModal({super.key});
@@ -18,6 +19,7 @@ class _RegisterModalState extends State<RegisterModal> {
   TextEditingController _typeController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
   String typeSelect = "Alimentos";
+
   _buildButtonApp() {
     return SizedBox(
       width: double.infinity,
@@ -26,16 +28,9 @@ class _RegisterModalState extends State<RegisterModal> {
         onPressed: () {
           GastoModel gasto = GastoModel(
               title: _productController.text,
-              price: double.parse(_productController.text),
+              price: double.parse(_priceController.text),
               datetime: _dateController.text,
-              type: _typeController.text);
-          // Map<String, dynamic> gastoMap = {
-          //   "title": _productController.text,
-          //   "price": _priceController.text,
-          //   "datetime": _dateController.text,
-          //   "type": _typeController.text,
-
-          // };
+              type: _typeController.text); // Usa _typeController.text
           DBAdmin().insrtarGasto(gasto).then((value) {
             if (value > 0) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -43,7 +38,7 @@ class _RegisterModalState extends State<RegisterModal> {
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
-                content: Text("Se registro"),
+                content: Text("Se registró"),
               ));
               Navigator.pop(context);
             }
@@ -80,11 +75,10 @@ class _RegisterModalState extends State<RegisterModal> {
                   colorScheme: ColorScheme.light(primary: Colors.black)),
               child: child!);
         });
-    _dateController.text = datePicker.toString();
-    // if (datePicker != null) {
-    //   final dateFormat;
-    // }
-    print(_dateController.text);
+    if (datePicker != null) {
+      final formattedDate = DateFormat('dd/MM/yyyy').format(datePicker);
+      _dateController.text = formattedDate;
+    }
   }
 
   @override
@@ -99,16 +93,14 @@ class _RegisterModalState extends State<RegisterModal> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              "Registra gasto",
-            ),
-            SizedBox(
-              height: 16,
+            Text("Registra gasto"),
+            SizedBox(height: 16),
+            FieldModelWidget(
+              hint: "Ingresa el título",
+              controller: _productController,
             ),
             FieldModelWidget(
-                hint: "Imngresa el titulo", controller: _productController),
-            FieldModelWidget(
-              hint: "Imngresa el monto",
+              hint: "Ingresa el monto",
               controller: _priceController,
               isNumberKeyBoard: true,
             ),
@@ -118,12 +110,9 @@ class _RegisterModalState extends State<RegisterModal> {
               isDatePicker: true,
               function: () {
                 showDateTimePicker();
-                print("es una fehca");
               },
             ),
-            SizedBox(
-              height: 16,
-            ),
+            SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Wrap(
@@ -135,9 +124,10 @@ class _RegisterModalState extends State<RegisterModal> {
                           data: e,
                           isSelected: e["name"] == typeSelect,
                           tap: () {
-                            typeSelect = e["name"];
-                            setState(() {});
-                            print(typeSelect);
+                            setState(() {
+                              typeSelect = e["name"];
+                              _typeController.text = typeSelect;
+                            });
                           },
                         ))
                     .toList(),

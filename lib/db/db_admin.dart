@@ -80,9 +80,13 @@ class DBAdmin {
     print(res);
   }
 
-  deleteGasto() async {
+  deleteGasto(int id) async {
     Database? db = await _checkDatabase();
-    int res = await db!.delete("GASTOS", where: 'id=1');
+    int res = await db!.delete(
+      "GASTOS",
+      where: 'ID = ?',
+      whereArgs: [id], // Usar el ID para especificar qué registro eliminar
+    );
     print(res);
   }
 }
